@@ -1,0 +1,38 @@
+<!DOCTYPE html> <html>
+<head lang="en">
+   <meta charset="utf-8">
+   <title>Line Chunker Client Test</title>
+</head>
+
+<body>
+<div id="box">
+</div>
+<script type="text/javascript">
+    <!-- put ws client code here -->
+    const conn = new WebSocket("ws://127.0.0.1:8080");
+    let chunk = [];
+    let cnt = 0;
+    conn.onopen = function () {
+        console.log("opened connection");
+        conn.send("timespan 20000", (err) => {
+            console.log("error on sending timespan")
+        });
+    };
+    conn.onerror = function (error) {
+        console.log("Error on open", error.toString());
+    };
+    conn.onmessage = function (message) {
+        console.log('got a message of %d bytes', (message.data).length);
+        chunk = (message.data).split(/^/m);
+        console.log('chunk size of %d lines', chunk.length);
+        document.body.appendChild(document.createTextNode(chunk))
+        if(++cnt === 2) {
+            conn.send("timespan 50000", (err) => {
+                d3.select("#runStatus").text("Error on sending updated display interval");
+            });
+            console.log("changed timespan");
+        }
+    };
+</script>
+</body>
+</html>
