@@ -2,12 +2,12 @@
 
 ## Summary
 
-line2Chunk is a nodejs program to collect line-by-line input piped from
-it from the standard input and pipe it out in chunks of that are space
-at timeSpan intervals, timeSpan being a millisecond value sent from the
-downstream piped web page. The time values from the input stream are used
-to compute the output chunk spacing. Wall clock values are used in case
-the timeSpan is changed by the consuming html, to preserve the same lag.
+line2Chunk is a command line nodejs program to collect timestamped lines
+that are piped into it and stream to websocket in chunks that are spaced
+at timeSpan intervals, timeSpan is a millisecond value sent from the
+client web page (defaults to 1 sec). Timestamps from the input stream are
+assumed to be the first field of each line and are used to compute the
+output chunk spacing. The timeSpan can be changed by the consuming html.
 
 line2Chunk was written to provide piped pping output as an input to a
 web client visualizer but can be used to "chunk" any line-by-line output
@@ -23,13 +23,13 @@ pping -i interface -m | node.js line2Chunk.js
 OR
 cat [some file of ppings] | node.js line2Chunk.js
 
-then either "open ppvizCLI.html" from command line or localhost web page
+then either "open ppvizCLI.html" from command line or localhost web page.
 
 Note1: that the input to this file doesn't have to be ppings, just any
 source of lines with a first field of time in seconds.
 
 Note2: the html file doesn't have to be ppvizCLI.html and can be any
-properly set up web page, e.g. the included index.html for testing
+properly set up web page, e.g. the included index.html.
 
 ## Examples
 
