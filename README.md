@@ -16,8 +16,8 @@ specified by the client.
 
 ## Usage
 
-line2Chunk requires nodejs (https://nodejs.org) and the packages 'ws',
-'websocket-stream', and 'stream'.
+line2Chunk requires nodejs (https://nodejs.org) and the packages 'ws' and
+'websocket-stream'.
 
 pping -i interface -m | node.js line2Chunk.js
 OR
@@ -25,11 +25,15 @@ cat [some file of ppings] | node.js line2Chunk.js
 
 then either "open ppvizCLI.html" from command line or localhost web page.
 
-Note1: that the input to this file doesn't have to be ppings, just any
-source of lines with a first field of time in seconds.
+Note that the input to this file doesn't have to be ppings, just any
+source of lines with a first field of time in seconds.  
+The html file doesn't have to be ppvizCLI.html but can be any
+properly set up web page, e.g. the index.html file included for testing. A
+quick test can be peformed by executing the command line:
 
-Note2: the html file doesn't have to be ppvizCLI.html and can be any
-properly set up web page, e.g. the included index.html.
+cat tst.pp | node line2Chunk.js
+
+And then open index.html in a browser window.
 
 ## Examples
 

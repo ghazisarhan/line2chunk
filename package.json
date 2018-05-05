@@ -9,7 +9,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "cat tst.pp | node line2Chunk.js; open index.html"
   },
   "repository": {
     "type": "git",
