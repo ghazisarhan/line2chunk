@@ -1,13 +1,14 @@
-# line2Chunk - nodejs program to serve line-by-line piped input in chunks
+# line2Chunk - nodejs program to serve line-by-line input into chunks
 
 ## Summary
 
-line2Chunk is a command line nodejs program to collect timestamped lines
-that are piped into it and stream to websocket in chunks that are spaced
-at timeSpan intervals, timeSpan is a millisecond value sent from the
+line2Chunk is a command line nodejs program that collects timestamped lines
+from its input stream into chunks of a regular timeSpan (generally) larger
+than the time difference between the lines which are sent to a websocket.
+The timeSpan is a millisecond value sent from the
 client web page (defaults to 1 sec). Timestamps from the input stream are
-assumed to be the first field of each line and are used to compute the
-output chunk spacing. The timeSpan can be changed by the consuming html.
+assumed to be the first field of each line. The timeSpan can be changed by
+the consuming web client.
 
 line2Chunk was written to provide piped pping output as an input to a
 web client visualizer but can be used to "chunk" any line-by-line output

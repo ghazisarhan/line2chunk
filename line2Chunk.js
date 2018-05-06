@@ -38,7 +38,7 @@ process.stdin.setEncoding('utf8');
 
 const WebSocketServer = require('ws').Server;
 const WebSocketStream = require('websocket-stream');
-const { Transform } = require('stream');
+const { Transform, pipeline } = require('stream');
 
 function sleep(time)   {    //time in milliseconds
     return new Promise (resolve => setTimeout(resolve, time))
@@ -141,15 +141,16 @@ wss.on('connection', function (ws) {
         if(!stream) {
             stream = WebSocketStream(ws, {objectMode: true});
             stream.setEncoding('utf8');
-            process.stdin
-                .pipe(collectInterval)
-                .pipe(stream)
-                .on('finish', () => {
-                    console.log('EOF');
-                    this.close(1000, 'done');
-                    process.exit(0);
-                }
-            );
+            pipeline( process.stdin, collectInterval, stream,
+                      (err) => {
+                          if (err) {
+                              console.error("pipline failed:", err);
+                          } else {
+                              console.log('EOF');
+                          }
+                          this.close(1000, 'done');
+                          process.exit(0);
+                      });
         }
         else if(intervalTimer) {
           //new interal timespan
