@@ -10,7 +10,7 @@ client web page (defaults to 1 sec). Timestamps from the input stream are
 assumed to be the first field of each line. The timeSpan can be changed by
 the consuming web client.
 
-line2Chunk was written to provide piped pping output as an input to a
+line2Chunk was written as a way to provide piped pping output to a
 web client visualizer but can be used to "chunk" any line-by-line output
 stream with a first field timestamp where the chunks cover some time span
 specified by the client.
@@ -34,7 +34,10 @@ quick test can be peformed by executing the command line:
 
 cat tst.pp | node line2Chunk.js
 
-And then open index.html in a browser window.
+And then open index.html in a browser window. The browser window will display
+and scroll the output lines. `index.html` can be used with `pping` to view its
+output in a browswer window and can also be used as a template for more
+sophisticated client viewers.
 
 ## Examples
 
