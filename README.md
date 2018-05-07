@@ -24,13 +24,13 @@ pping -i interface -m | node.js line2Chunk.js
 OR
 cat [some file of ppings] | node.js line2Chunk.js
 
-then either "open ppvizCLI.html" from command line or localhost web page.
+then either "open `index.html`" from command line or navigate to `index.html`
+from localhost web page. (This can be used with `ppvizCLI.html` from Pollere's
+in-progress `ppviz` project for the adventurous.)
 
 Note that the input to this file doesn't have to be ppings, just any
 source of lines with a first field of time in seconds.  
-The html file doesn't have to be ppvizCLI.html but can be any
-properly set up web page, e.g. the index.html file included for testing. A
-quick test can be peformed by executing the command line:
+A simple test can be peformed by executing the command line:
 
 cat tst.pp | node line2Chunk.js
 
