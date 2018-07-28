@@ -44,13 +44,14 @@ function sleep(time)   {    //time in milliseconds
     return new Promise (resolve => setTimeout(resolve, time))
 }
 
-let timeSpan = 1000;        //sending interval in ms, default value
+let timeSpan = 1000; //sending interval in ms, default value
 let timeSpanSec;    //sending interval in sec
 let lineArr = [];
 let intervalTimer;  //output chunk timer
 let EOI = false;    //end of input flag
 let collectIntervalFlushCB; //so flush() callback() routine can be deferred
 let lastTime;       //start of last send interval in input stream time
+let frag = "";      //to preserve any line fragment for next chunk
 let lastSendWC;     //start of last send interval in wall clock time
 
 //send all the lines with time earlier than nextTime
@@ -94,7 +95,17 @@ let collectInterval = new Transform({
         //transform chunk to string and append to lineArr in lines
         //add this chunk to the lineArr
         chunk.toString().split(/^/m)
-            .forEach((line, index) => { lineArr.push(line); });
+            .forEach((line, index) => {
+                if(index === 0 && frag.length) {
+                    line = frag.concat(line);
+                    frag = "";
+                }
+                if(line.endsWith("\n")) {
+                    lineArr.push(line);
+                } else {
+                    frag = line;
+                }
+            });
 
         //if this is the first chunk received, compute end of send interval
         if(!lastTime) {
