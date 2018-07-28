@@ -16,13 +16,13 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
     This is a nodejs program to collect line-by-line input that is piped into
-    it from the standard input and pipe it out in chunks of that are space
+    it from the standard input and pipe it out in chunks of that are spaced
     at timeSpan intervals, timeSpan being a millisecond value sent from the
     downstream piped web page. The time values from the input stream are used
     to compute the output chunk spacing. Wall clock values are used in case
     the timeSpan is changed by the consuming html, to preserve the same lag.
 
-    usage: pping -i interface -m | node.js line2Chunk.js
+    example usage: pping -i interface -m | node.js line2Chunk.js
         OR cat [some file of ppings] | node.js line2Chunk.js 
         then either "open ppvizCLI.html" from command line or localhost web page
     Note1: that the input to this file doesn't have to be ppings, just any
@@ -57,7 +57,7 @@ let lastSendWC;     //start of last send interval in wall clock time
 function  sendInterval (ts) {
     lastTime += timeSpanSec;
     lastSendWC = Date.now();
-    let outString = '';;
+    let outString = '';
     while(lineArr.length && (lineArr[0]).split(' ')[0] < lastTime) {
         outString += lineArr.shift();
     }
