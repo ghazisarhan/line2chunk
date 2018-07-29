@@ -53,9 +53,12 @@ let collectIntervalFlushCB; //so flush() callback() routine can be deferred
 let lastTime;       //start of last send interval in input stream time
 let frag = "";      //to preserve any line fragment for next chunk
 let lastSendWC;     //start of last send interval in wall clock time
+let ok = true;      //flag for push'd past highWaterMark
 
 //send all the lines with time earlier than nextTime
 function  sendInterval (ts) {
+    if(!ok)
+        return; //in case timer goes off while waiting for drain
     lastTime += timeSpanSec;
     lastSendWC = Date.now();
     let outString = '';
@@ -63,8 +66,13 @@ function  sendInterval (ts) {
         outString += lineArr.shift();
     }
     if(outString.length) {
-        ts.push(outString);
+        ok = ts.push(outString);
     }
+    if(!ok)
+        ts.once('drain', () => {
+            ok = true;
+            sendInterval(collectInterval);
+        });
     //no more input and nothing left to send
     if(!lineArr.length && EOI) {
         clearInterval(intervalTimer);
@@ -135,21 +143,18 @@ let collectInterval = new Transform({
 let wss = new WebSocketServer({
     host: '127.0.0.1',
     port: 8080,
-    perMessageDeflate: false,
-    maxPayload: blockSize});
+    perMessageDeflate: false });
 
 wss.on('connection', function (ws) {
     let stream;
-    ws.on('message', function(msg) {
+    ws.once('message', function(msg) {
         //consume the message
         let cmd = msg.split(' ');
         if(cmd.length === 2 && cmd[0] === 'timespan') {
             timeSpan = parseInt(cmd[1]);
         }
         timeSpanSec = timeSpan / 1000.;
-
-        //if first msg set up the stream and pipes
-        if(!stream) {
+        //set up the stream and pipes, collectInterval starts timer
             stream = WebSocketStream(ws, {objectMode: true});
             stream.setEncoding('utf8');
             pipeline( process.stdin, collectInterval, stream,
@@ -162,10 +167,16 @@ wss.on('connection', function (ws) {
                           this.close(1000, 'done');
                           process.exit(0);
                       });
+    });
+    ws.on('message', function(msg) {
+        //consume the message
+        let cmd = msg.split(' ');
+        if(cmd.length === 2 && cmd[0] === 'timespan') {
+            timeSpan = parseInt(cmd[1]);
         }
-        else if(intervalTimer) {
-          //new interal timespan
-            resetInterval();
+        timeSpanSec = timeSpan / 1000.;
+        if(intervalTimer) {
+            resetInterval();    //new interal timespan
         }
     });
 });
