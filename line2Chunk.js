@@ -98,6 +98,8 @@ async function resetInterval() {
 
 let collectInterval = new Transform({
     readableObjectMode: true,
+    writableHighWaterMark: blockSize,
+    readableHighWaterMark: blockSize,
 
     transform(chunk, encoding, callback) {
         //transform chunk to string and append to lineArr in lines
