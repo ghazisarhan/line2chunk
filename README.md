@@ -43,8 +43,8 @@ sophisticated client viewers.
 
 ## See Also
 
-`pping` at https://github/pollere/pping.
-`ppviz` at https://github/pollere/ppviz.
+`pping` at https://github.com/pollere/pping.
+`ppviz` at https://github.com/pollere/ppviz.
 
 ## Author
 
